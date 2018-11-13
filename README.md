@@ -1,2 +1,7 @@
 # KorDevAus-Announcement-API
-This is announcement API
+
+## TEST URL
+
+```bash
+> curl https://{host}/api/announcements?name={your name}
+```
