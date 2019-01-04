@@ -1,0 +1,74 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+	<!-- <route id="p1"> <from uri="direct://get-chimp" /> <log message="${header.q}" /> <setBody><simple>{{chimp.to}}${header.q}</simple></setBody> 
+		<to uri="direct://call-mailchimp"/> <unmarshal><json library="Jackson"/></unmarshal> </route> -->
+	<route id="p2">
+		<from uri="direct://get-members" />
+		<setBody>
+			<constant>{{chimp.to}}/lists/{{chimp.list-id}}/members?count=100</constant>
+		</setBody>
+		<to uri="direct://call-mailchimp" />
+		<unmarshal>
+			<json library="Jackson" unmarshalTypeName="org.koreandevelopersaustralia.app.model.Members" />
+		</unmarshal>
+		<!-- <marshal><json library="Jackson" unmarshalTypeName="org.koreandevelopersaustralia.app.model.Members" jsonView="org.koreandevelopersaustralia.app.model.Views$Normal"/></marshal> 
+			<unmarshal><json library="Jackson"/></unmarshal> -->
+	</route>
+	<route id="p2-1">
+		<from uri="direct://get-member" />
+		<setBody>
+			<simple>{{chimp.to}}/lists/{{chimp.list-id}}/members?count=100&amp;unique_email_id=${header.emailUid}</simple>
+		</setBody>
+		<to uri="direct://call-mailchimp" />
+		<unmarshal>
+			<json library="Jackson" unmarshalTypeName="org.koreandevelopersaustralia.app.model.Members" />
+		</unmarshal>
+	</route>
+	<route id="p3">
+		<from uri="direct://call-mailchimp" />
+		<removeHeaders pattern="*" />
+		<setHeader headerName="Authorization">
+			<constant>{{chimp.token}}</constant>
+		</setHeader>
+		<setHeader headerName="CamelHttpMethod">
+			<constant>GET</constant>
+		</setHeader>
+		<toD uri="${body}" />
+		<removeHeaders pattern="*" />
+	</route>
+
+	<route id="p4">
+		<from uri="direct://get-rsvps" />
+		<bean ref="rsvpService" method="getRsvps()" />
+		<choice>
+			<when>
+				<simple>${header.include} == "member"</simple>
+				<split>
+					<simple>${body}</simple>
+					<setHeader headerName="emailUid">
+						<simple>${body.emailUid}</simple>
+					</setHeader>
+					<enrich strategyRef="memberRsvpAggregationStrategy">
+						<constant>direct://get-member</constant>
+					</enrich>
+				</split>
+			</when>
+		</choice>
+		<removeHeaders pattern="*" />
+	</route>
+	<route id="p4-0">
+		<from uri="direct://post-rsvp" />
+		<bean ref="rsvpService" method="upsertRsvp(${body})" />
+		<removeHeaders pattern="*" />
+	</route>
+	<route id="p4-1">
+		<from uri="direct://get-rsvps-by-campaign-uid" />
+		<bean ref="rsvpService" method="getRsvps(${header.campaignUid})" />
+		<removeHeaders pattern="*" />
+	</route>
+	<route id="p4-2">
+		<from uri="direct://get-rsvps-by-campaign-and-email-uid" />
+		<bean ref="rsvpService" method="getRsvps(${header.campaignUid}, ${header.emailUid})" />
+		<removeHeaders pattern="*" />
+	</route>
+
+</routes>

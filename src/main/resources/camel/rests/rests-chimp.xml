@@ -1,0 +1,36 @@
+<rests xmlns="http://camel.apache.org/schema/spring">
+
+	<rest path="/v1" consumes="application/json" produces="application/json">
+		<description>Announce API</description>
+		
+		<get id="a1" uri="/members" produces="application/json" outType="org.koreandevelopersaustralia.app.model.Members">
+			<description>List of members</description>
+			<to uri="direct://get-members" />
+		</get>
+		<get id="a1-1" uri="/members/{emailUid}" produces="application/json" outType="org.koreandevelopersaustralia.app.model.Member">
+			<description>A member by email UID</description>
+			<to uri="direct://get-member" />
+		</get>
+		
+		<get id="a2" uri="/rsvps" produces="application/json" outType="org.koreandevelopersaustralia.app.model.Rsvp">
+			<description>List of rsvps</description>
+			<param name="include" type="query" required="false">
+				<allowableValues><value>member</value></allowableValues>
+			</param>
+			<to uri="direct://get-rsvps" />
+		</get>
+		<put id="a2-0" uri="/rsvps" produces="application/json" outType="org.koreandevelopersaustralia.app.model.Rsvp"  type="org.koreandevelopersaustralia.app.model.Rsvp">
+			<description>Create rsvp</description>
+			<to uri="direct://post-rsvp" />
+		</put>
+		<get id="a2-1" uri="/rsvps/{campaignUid}" produces="application/json" outType="org.koreandevelopersaustralia.app.model.Rsvp">
+			<description>List of rsvps per campaign</description>
+			<to uri="direct://get-rsvps-by-campaign-uid" />
+		</get>
+		<get id="a2-2" uri="/rsvps/{campaignUid}/{emailUid}" produces="application/json" outType="org.koreandevelopersaustralia.app.model.Rsvp">
+			<description>rsvp per campaign and email</description>
+			<to uri="direct://get-rsvps-by-campaign-and-email-uid" />
+		</get>
+	</rest>
+	
+</rests>

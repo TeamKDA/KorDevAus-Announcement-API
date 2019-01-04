@@ -1,0 +1,14 @@
+<rests xmlns="http://camel.apache.org/schema/spring">
+
+	<rest apiDocs="false">
+		<get id="ac1" uri="/health">
+			<description>Health Check</description>
+			<to uri="direct://get-health" />
+		</get>
+		<get id="sw1" uri="/swag">
+			<description>Swagger 2.0</description>
+			<to uri="direct://get-swagger" />
+		</get>
+	</rest>
+
+</rests>

@@ -1,0 +1,22 @@
+version: '3'
+
+networks:
+  kda_network:
+    driver: bridge
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: kda_mysql
+    networks:
+      - kda_network
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_DATABASE=kda_db
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=teamkda
+      - MYSQL_PASSWORD=test
+    volumes:
+      - ./kda_mysql:/var/lib/mysql

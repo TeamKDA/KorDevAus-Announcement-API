@@ -1,0 +1,23 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+	
+	<route id="c1">
+		<from uri="direct://get-swagger" />
+		<removeHeaders pattern="*" />
+		<setHeader headerName="CamelHttpMethod"><constant>GET</constant></setHeader>
+		<to uri="{{camel.rest.scheme}}://{{camel.rest.api-host}}{{camel.rest.context-path}}{{camel.rest.api-context-path}}?throwExceptionOnFailure=false&amp;authMethod=Basic&amp;authUsername={{admin.id}}&amp;authPassword={{admin.pw}}" />
+		<removeHeaders pattern="*" />
+		<unmarshal><json library="Jackson"/></unmarshal>
+		<bean ref="swaggerTransformer" method="transform"/>
+	</route>
+	
+	<route id="c2">
+		<from uri="direct://get-health" />
+		<removeHeaders pattern="*" />
+		<setHeader headerName="CamelHttpMethod"><constant>GET</constant></setHeader>
+		<setHeader headerName="CamelHttpQuery"><constant>authMethod=Basic&amp;authUsername={{admin.id}}&amp;authPassword={{admin.pw}}</constant></setHeader>
+		<to uri="{{camel.rest.scheme}}://{{camel.rest.api-host}}/actuator/health?throwExceptionOnFailure=false&amp;authMethod=Basic&amp;authUsername={{admin.id}}&amp;authPassword={{admin.pw}}" />
+		<removeHeaders pattern="*" />
+		<unmarshal><json library="Jackson"/></unmarshal>
+	</route>
+
+</routes>
