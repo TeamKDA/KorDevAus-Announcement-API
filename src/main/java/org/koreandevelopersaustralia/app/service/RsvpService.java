@@ -25,6 +25,16 @@ public class RsvpService {
     }
 
     public Rsvp upsertRsvp(final Rsvp rsvp) {
+    	return _upsertRsvp(rsvp);
+    }
+    
+    public Rsvp upsertRsvp(final String campaignUid, final String emailUid, final Rsvp rsvp) throws Exception {
+    	rsvp.setCampaignUid(campaignUid);
+    	rsvp.setEmailUid(emailUid);
+    	return _upsertRsvp(rsvp);
+    }
+    
+    private Rsvp _upsertRsvp(final Rsvp rsvp) {
     	List<Rsvp> rsvpList = getRsvps(rsvp.getCampaignUid(), rsvp.getEmailUid());
     	Rsvp rsvpObj = null;
     	if (rsvpList != null && rsvpList.size() > 0) {

@@ -35,3 +35,6 @@ hs_err_pid*
 local.settings.json
 bin/
 obj/
+
+# KDA
+kda_mysql/

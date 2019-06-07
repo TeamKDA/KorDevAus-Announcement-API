@@ -1,6 +1,4 @@
 <routes xmlns="http://camel.apache.org/schema/spring">
-	<!-- <route id="p1"> <from uri="direct://get-chimp" /> <log message="${header.q}" /> <setBody><simple>{{chimp.to}}${header.q}</simple></setBody> 
-		<to uri="direct://call-mailchimp"/> <unmarshal><json library="Jackson"/></unmarshal> </route> -->
 	<route id="p2">
 		<from uri="direct://get-members" />
 		<setBody>
@@ -10,8 +8,6 @@
 		<unmarshal>
 			<json library="Jackson" unmarshalTypeName="org.koreandevelopersaustralia.app.model.Members" />
 		</unmarshal>
-		<!-- <marshal><json library="Jackson" unmarshalTypeName="org.koreandevelopersaustralia.app.model.Members" jsonView="org.koreandevelopersaustralia.app.model.Views$Normal"/></marshal> 
-			<unmarshal><json library="Jackson"/></unmarshal> -->
 	</route>
 	<route id="p2-1">
 		<from uri="direct://get-member" />
@@ -39,6 +35,30 @@
 	<route id="p4">
 		<from uri="direct://get-rsvps" />
 		<bean ref="rsvpService" method="getRsvps()" />
+		<to uri="direct://get-rsvps-response" />
+	</route>
+	<route id="p4-0">
+		<from uri="direct://post-rsvp" />
+		<bean ref="rsvpService" method="upsertRsvp(${body})" />
+		<removeHeaders pattern="*" />
+	</route>
+	<route id="p4-01">
+		<from uri="direct://post-rsvp-by-campaign-and-email-uid" />
+		<bean ref="rsvpService" method="upsertRsvp(${header.campaignUid}, ${header.emailUid}, ${body})" />
+		<removeHeaders pattern="*" />
+	</route>
+	<route id="p4-1">
+		<from uri="direct://get-rsvps-by-campaign-uid" />
+		<bean ref="rsvpService" method="getRsvps(${header.campaignUid})" />
+		<to uri="direct://get-rsvps-response" />
+	</route>
+	<route id="p4-2">
+		<from uri="direct://get-rsvps-by-campaign-and-email-uid" />
+		<bean ref="rsvpService" method="getRsvps(${header.campaignUid}, ${header.emailUid})" />
+		<to uri="direct://get-rsvps-response" />
+	</route>
+	<route id="p4-3">
+		<from uri="direct://get-rsvps-response" />
 		<choice>
 			<when>
 				<simple>${header.include} == "member"</simple>
@@ -53,21 +73,6 @@
 				</split>
 			</when>
 		</choice>
-		<removeHeaders pattern="*" />
-	</route>
-	<route id="p4-0">
-		<from uri="direct://post-rsvp" />
-		<bean ref="rsvpService" method="upsertRsvp(${body})" />
-		<removeHeaders pattern="*" />
-	</route>
-	<route id="p4-1">
-		<from uri="direct://get-rsvps-by-campaign-uid" />
-		<bean ref="rsvpService" method="getRsvps(${header.campaignUid})" />
-		<removeHeaders pattern="*" />
-	</route>
-	<route id="p4-2">
-		<from uri="direct://get-rsvps-by-campaign-and-email-uid" />
-		<bean ref="rsvpService" method="getRsvps(${header.campaignUid}, ${header.emailUid})" />
 		<removeHeaders pattern="*" />
 	</route>
 

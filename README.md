@@ -29,10 +29,11 @@ https://kda.cfapps.io/webjars/swagger-ui/index.html?url=/api/swag
 
 ## Azure Webapp Deploy
 ```
+az login
 mvn clean package azure-webapp:deploy
 ````
 
 ## Azure KDA API
 ```
-https://za.azurewebsites.net/webjars/swagger-ui/index.html?url=/api/swag
+https://apiapp-kda-dev-ase-kda-announcement-api.azurewebsites.net/webjars/swagger-ui/index.html?url=/api/swag
 ```
