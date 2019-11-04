@@ -1,12 +1,13 @@
 ---
 applications:
-  - name: kda
+  - name: kdapi
     memory: 512M
     instances: 1
     random-route: false
     path: target/kda-api-1.0.0.jar
     env:
       JAVA_OPTS: '-XX:ReservedCodeCacheSize=100m -XX:MaxMetaspaceSize=100m -Xss1m -Dspring.profiles.active=cf'
+      APP_ENC: '${APP_ENC}'
 
 #services:
 #  - cloud-rabbit

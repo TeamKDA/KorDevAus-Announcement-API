@@ -12,7 +12,8 @@
 	<artifactId>kda-api</artifactId>
 	<name>KDA Apps :: Api</name>
 	<description>KDA API App</description>
-
+	<version>1.0.0</version>
+	
 	<properties>
 		<swagger-ui.version>3.19.5</swagger-ui.version>
 		<webjars-locator.version>0.34</webjars-locator.version>
@@ -51,7 +52,7 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>
